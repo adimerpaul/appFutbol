@@ -31,9 +31,17 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Torneo'),
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Icon(Icons.menu),
+            Text('Campeonatos',style: TextStyle(fontSize: 20)),
+            Icon(Icons.search),
+            // icon notification
+          ],
+        ),
       ),
       body: ListView.separated(
         separatorBuilder: (context, index) => const Divider(),

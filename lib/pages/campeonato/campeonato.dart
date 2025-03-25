@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:futbol/pages/campeonato/equipos.dart';
+import 'package:futbol/pages/campeonato/partidos.dart';
 
 class CampeonatoPage extends StatefulWidget {
   final Map campeonato;
@@ -55,6 +57,7 @@ class _CampeonatoPageState extends State<CampeonatoPage>
           tabs: [
             // customTab('Resumen', Icons.info, 0),
             customTab('Equipos', Icons.groups, 0),
+            customTab('Partidos', Icons.sports_soccer, 1),
           ],
         ),
       ),
@@ -88,12 +91,8 @@ class _CampeonatoPageState extends State<CampeonatoPage>
           // ),
 
           // Tab 2: Equipos
-          Center(
-            child: Text(
-              'Lista de Equipos',
-              style: TextStyle(fontSize: 20),
-            ),
-          ),
+          Equipos(liga: campeonato),
+          Partidos(liga: campeonato),
         ],
       ),
     );

@@ -54,7 +54,7 @@ class _MainPageState extends State<MainPage> {
         itemBuilder: (context, index) {
           return ListTile(
             // dense: true,
-            leading: Image.asset( campeonatos[index]['tipo'] == 'Futbol' ? 'assets/images/futbol.jpg' : 'assets/images/basquet.jpg', width: 50),
+            leading: Image.asset( campeonatos[index]['tipo'] == 'Futbol' ? 'assets/images/futbol.jpg' : 'assets/images/basquet.png', width: 50),
             title: Text(campeonatos[index]['name'],style: TextStyle(fontSize: 20)),
             subtitle: Text('Equipos: ${campeonatos[index]['equipos']}'),
             onTap: () {

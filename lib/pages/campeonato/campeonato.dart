@@ -36,14 +36,25 @@ class _CampeonatoPageState extends State<CampeonatoPage>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(campeonato['name']),
+        title: Row(
+          children: [
+            Image.asset(
+              campeonato['tipo'] == 'Futbol'
+                  ? 'assets/images/futbol.jpg'
+                  : 'assets/images/basquet.png',
+              width: 30,
+            ),
+            Text(campeonato['name'], style: const TextStyle(fontSize: 15)),
+          ],
+        ),
         backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.white,
           tabs: [
-            customTab('Resumen', Icons.info, 0),
-            customTab('Equipos', Icons.groups, 1),
+            // customTab('Resumen', Icons.info, 0),
+            customTab('Equipos', Icons.groups, 0),
           ],
         ),
       ),
@@ -51,30 +62,30 @@ class _CampeonatoPageState extends State<CampeonatoPage>
         controller: _tabController,
         children: [
           // Tab 1: Resumen
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                Image.asset(
-                  campeonato['tipo'] == 'Futbol'
-                      ? 'assets/images/futbol.jpg'
-                      : 'assets/images/basquet.jpg',
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  campeonato['name'],
-                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'Cantidad de equipos: ${campeonato['equipos']}',
-                  style: const TextStyle(fontSize: 18),
-                ),
-              ],
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(16.0),
+          //   child: Column(
+          //     children: [
+          //       Image.asset(
+          //         campeonato['tipo'] == 'Futbol'
+          //             ? 'assets/images/futbol.jpg'
+          //             : 'assets/images/basquet.jpg',
+          //         height: 200,
+          //         fit: BoxFit.cover,
+          //       ),
+          //       const SizedBox(height: 20),
+          //       Text(
+          //         campeonato['name'],
+          //         style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          //       ),
+          //       const SizedBox(height: 10),
+          //       Text(
+          //         'Cantidad de equipos: ${campeonato['equipos']}',
+          //         style: const TextStyle(fontSize: 18),
+          //       ),
+          //     ],
+          //   ),
+          // ),
 
           // Tab 2: Equipos
           Center(
@@ -98,10 +109,10 @@ class _CampeonatoPageState extends State<CampeonatoPage>
         children: [
           Icon(
             icon,
-            color: isSelected ? Colors.white : Colors.grey,
+            color: isSelected ? Colors.white : Colors.black,
           ),
           const SizedBox(width: 8),
-          Text(title, style: TextStyle(color: isSelected ? Colors.white : Colors.grey)),
+          Text(title, style: TextStyle(color: isSelected ? Colors.white : Colors.black)),
         ],
       ),
     );

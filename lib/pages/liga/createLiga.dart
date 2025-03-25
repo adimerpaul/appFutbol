@@ -74,8 +74,8 @@ class _CreateligaState extends State<Createliga> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Crear Liga'),
-        backgroundColor: Colors.green,
+        title: Text(widget.liga != null ? 'Actualizar Liga' : 'Crear Liga'),
+        backgroundColor: widget.liga != null ? Colors.orange : Colors.green,
         foregroundColor: Colors.white,
       ),
       body: Padding(
@@ -137,7 +137,7 @@ class _CreateligaState extends State<Createliga> {
               width: double.infinity,
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
+                  backgroundColor: widget.liga != null ? Colors.orange : Colors.green,
                   foregroundColor: Colors.white,
                 ),
                 icon: const Icon(Icons.save, color: Colors.white),

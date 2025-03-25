@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:futbol/addons/scaffold.dart';
 import 'package:futbol/color/Colors.dart';
 import 'package:http/http.dart' as http;
 class MainPage extends StatefulWidget {
@@ -42,7 +43,7 @@ class _MainPageState extends State<MainPage> {
           children: [
             Icon(Icons.menu),
             Text('Campeonatos',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
-            Icon(Icons.search),
+            Icon(Icons.person_outline_outlined),
             // icon notification
           ],
         ),
@@ -67,8 +68,8 @@ class _MainPageState extends State<MainPage> {
         itemBuilder: (context) => [
           PopupMenuItem(
             child: ListTile(
-              leading: Icon(Icons.sports_soccer),
-              title: Text('Futbol'),
+              leading: Icon(Icons.add),
+              title: Text('Crear liga'),
             ),
             value: 'liga',
           ),
@@ -80,12 +81,15 @@ class _MainPageState extends State<MainPage> {
             value: 'actualizar',
           ),
         ],
-        onSelected: (value) {
+        onSelected: (value) async {
           if (value == 'actualizar') {
             getLigas();
           }
           if (value == 'liga') {
-            Navigator.pushNamed(context, '/crear-liga');
+            var result =await Navigator.pushNamed(context, '/crear-liga');
+            if (result == true){
+              getLigas();
+            }
           }
         },
       )

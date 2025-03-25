@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:futbol/pages/liga/createLiga.dart';
 import 'package:futbol/pages/main/main.dart';
 
 import 'pages/campeonato/campeonato.dart';
@@ -35,7 +36,12 @@ class _MyAppState extends State<MyApp> {
           if (settings.name == '/') {
             return MaterialPageRoute(builder: (context) => const MainPage());
           }
-
+          // Navigator.pushNamed(context, '/crear-liga');
+          if (settings.name == '/crear-liga') {
+            return MaterialPageRoute(
+              builder: (context) => const Createliga(),
+            );
+          }
           if (settings.name == '/campeonato') {
             final campeonato = settings.arguments as Map;
             return MaterialPageRoute(

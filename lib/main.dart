@@ -38,8 +38,9 @@ class _MyAppState extends State<MyApp> {
           }
           // Navigator.pushNamed(context, '/crear-liga');
           if (settings.name == '/crear-liga') {
+            final liga = settings.arguments as Map?;
             return MaterialPageRoute(
-              builder: (context) => const Createliga(),
+              builder: (context) => Createliga(liga: liga),
             );
           }
           if (settings.name == '/campeonato') {

@@ -5,7 +5,11 @@ import 'package:http/http.dart' as http;
 import '../../addons/scaffold.dart';
 
 class Createliga extends StatefulWidget {
-  const Createliga({super.key});
+  final Map? liga;
+  const Createliga({
+    super.key,
+    this.liga,
+  });
 
   @override
   State<Createliga> createState() => _CreateligaState();
@@ -21,6 +25,10 @@ class _CreateligaState extends State<Createliga> {
   void initState() {
     super.initState();
     tipo.text = 'Futbol';
+    if (widget.liga != null) {
+      name.text = widget.liga!['name'];
+      tipo.text = widget.liga!['tipo'];
+    }
   }
 
   save() async {
@@ -31,6 +39,22 @@ class _CreateligaState extends State<Createliga> {
     setState(() {
       loading = true;
     });
+    if (widget.liga != null) {
+      var response = await http.put(Uri.parse('$url/ligas/${widget.liga!['id']}'), body: {
+        'name': name.text,
+        'tipo': tipo.text,
+      });
+      if (response.statusCode == 200) {
+        success(context, 'Liga actualizada correctamente');
+        Navigator.pop(context, true);
+      } else {
+        error(context, response.body);
+      }
+      setState(() {
+        loading = false;
+      });
+      return;
+    }
     var response = await http.post(Uri.parse('$url/ligas'), body: {
       'name': name.text,
       'tipo': tipo.text,
@@ -117,7 +141,7 @@ class _CreateligaState extends State<Createliga> {
                   foregroundColor: Colors.white,
                 ),
                 icon: const Icon(Icons.save, color: Colors.white),
-                label: loading ? const CircularProgressIndicator() : const Text('Crear Liga'),
+                label: loading ? const CircularProgressIndicator() : Text(widget.liga != null ? 'Actualizar Liga' : 'Crear Liga'),
                 onPressed: loading ? null : save,
                 // child: const Text('Crear Liga'),
               ),

@@ -24,7 +24,7 @@ class _MainPageState extends State<MainPage> {
     // print(url);
     var response = await http.get(Uri.parse('$url/ligas'));
     if (response.statusCode == 200) {
-      print(response.body);
+      // print(response.body);
       var res = json.decode(response.body);
       campeonatos = res;
       setState(() {});
@@ -60,39 +60,110 @@ class _MainPageState extends State<MainPage> {
             onTap: () {
               Navigator.pushNamed(context, '/campeonato', arguments: campeonatos[index]);
             },
+          //   acciones modificar y elminar
+            trailing: PopupMenuButton(
+              icon: Icon(Icons.more_vert),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  child: ListTile(
+                    leading: Icon(Icons.edit),
+                    title: Text('Modificar'),
+                  ),
+                  value: 'modificar',
+                ),
+                PopupMenuItem(
+                  child: ListTile(
+                    leading: Icon(Icons.delete),
+                    title: Text('Eliminar'),
+                  ),
+                  value: 'eliminar',
+                ),
+              ],
+              onSelected: (value) async {
+                if (value == 'modificar') {
+                  var result = await Navigator.pushNamed(context, '/crear-liga', arguments: campeonatos[index]);
+                  if (result == true){
+                    getLigas();
+                  }
+                }
+                if (value == 'eliminar') {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Eliminar'),
+                        content: Text('¿Estas seguro de eliminar este campeonato?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('Cancelar'),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              var response = await http.delete(Uri.parse('$url/ligas/${campeonatos[index]['id']}'));
+                              if (response.statusCode == 200) {
+                                getLigas();
+                                Navigator.pop(context);
+                              } else {
+                                print('Error'+response.body);
+                              }
+                            },
+                            child: Text('Eliminar'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+              },
+            ),
           );
         },
       ),
-      floatingActionButton: PopupMenuButton(
-        icon: Icon(Icons.add),
-        itemBuilder: (context) => [
-          PopupMenuItem(
-            child: ListTile(
-              leading: Icon(Icons.add),
-              title: Text('Crear liga'),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          showMenu(
+            context: context,
+            position: RelativeRect.fromLTRB(
+              MediaQuery.of(context).size.width - 100,
+              MediaQuery.of(context).size.height - 150,
+              16,
+              16,
             ),
-            value: 'liga',
-          ),
-          PopupMenuItem(
-            child: ListTile(
-              leading: Icon(Icons.refresh),
-              title: Text('Actualizar'),
-            ),
-            value: 'actualizar',
-          ),
-        ],
-        onSelected: (value) async {
-          if (value == 'actualizar') {
-            getLigas();
-          }
-          if (value == 'liga') {
-            var result =await Navigator.pushNamed(context, '/crear-liga');
-            if (result == true){
+            items: [
+              PopupMenuItem(
+                value: 'liga',
+                child: ListTile(
+                  leading: Icon(Icons.add),
+                  title: Text('Crear liga'),
+                ),
+              ),
+              PopupMenuItem(
+                value: 'actualizar',
+                child: ListTile(
+                  leading: Icon(Icons.refresh),
+                  title: Text('Actualizar'),
+                ),
+              ),
+            ],
+          ).then((value) async {
+            if (value == 'actualizar') {
               getLigas();
             }
-          }
+            if (value == 'liga') {
+              var result = await Navigator.pushNamed(context, '/crear-liga');
+              if (result == true) {
+                getLigas();
+              }
+            }
+          });
         },
-      )
+        label: Text("Opciones",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
+        icon: Icon(Icons.menu, color: Colors.white),
+        backgroundColor: Colors.green,
+      ),
     );
   }
 }

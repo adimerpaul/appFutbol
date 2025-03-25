@@ -17,12 +17,14 @@ class _CampeonatoPageState extends State<CampeonatoPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
+  final GlobalKey<EquiposState> equiposKey = GlobalKey<EquiposState>();
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
-      setState(() {}); // Para redibujar y actualizar el color del ícono
+      setState(() {});
     });
   }
 
@@ -55,7 +57,6 @@ class _CampeonatoPageState extends State<CampeonatoPage>
           controller: _tabController,
           indicatorColor: Colors.white,
           tabs: [
-            // customTab('Resumen', Icons.info, 0),
             customTab('Equipos', Icons.groups, 0),
             customTab('Partidos', Icons.sports_soccer, 1),
           ],
@@ -64,30 +65,90 @@ class _CampeonatoPageState extends State<CampeonatoPage>
       body: TabBarView(
         controller: _tabController,
         children: [
-          Equipos(liga: campeonato),
+          Equipos(key: equiposKey, liga: campeonato), // ✅ pasa la key
           Partidos(liga: campeonato),
         ],
       ),
+      floatingActionButton: _buildFloatingActionButton(),
     );
   }
 
-  /// 🔧 Este widget genera los tabs personalizados
+  Widget _buildFloatingActionButton() {
+    switch (_tabController.index) {
+      case 0:
+        return SizedBox(
+          height: 40,
+          child: FloatingActionButton.extended(
+            onPressed: () {
+              showMenu(
+                context: context,
+                position: RelativeRect.fromLTRB(
+                  MediaQuery.of(context).size.width - 100,
+                  MediaQuery.of(context).size.height - 150,
+                  16,
+                  16,
+                ),
+                items: [
+                  PopupMenuItem(
+                    value: 'agregar',
+                    child: ListTile(
+                      leading: const Icon(Icons.add),
+                      title: const Text('Agregar equipo'),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 'actualizar',
+                    child: ListTile(
+                      leading: const Icon(Icons.refresh),
+                      title: const Text('Actualizar'),
+                    ),
+                  ),
+                ],
+              ).then((value) async {
+                if (value == 'agregar') {
+                  await Navigator.pushNamed(
+                    context,
+                    '/crear-equipo',
+                    arguments: widget.campeonato,
+                  );
+                  equiposKey.currentState?.getEquipo(); // ✅ refresca al volver
+                }
+                if (value == 'actualizar') {
+                  equiposKey.currentState?.getEquipo(); // ✅ actualiza
+                }
+              });
+            },
+            label: const Text("Equipo", style: TextStyle(color: Colors.white)),
+            icon: const Icon(Icons.menu, color: Colors.white),
+            elevation: 10,
+            backgroundColor: Colors.blue,
+          ),
+        );
+      case 1:
+        return FloatingActionButton(
+          onPressed: () {
+            print('Partido');
+          },
+          child: const Icon(Icons.add),
+        );
+      default:
+        return const SizedBox();
+    }
+  }
+
   Widget customTab(String title, IconData icon, int index) {
     final isSelected = _tabController.index == index;
-
     return Tab(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            color: isSelected ? Colors.white : Colors.black,
-          ),
+          Icon(icon, color: isSelected ? Colors.white : Colors.black),
           const SizedBox(width: 8),
-          Text(title, style: TextStyle(color: isSelected ? Colors.white : Colors.black)),
+          Text(title,
+              style:
+              TextStyle(color: isSelected ? Colors.white : Colors.black)),
         ],
       ),
     );
   }
 }
-

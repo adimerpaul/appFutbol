@@ -122,47 +122,51 @@ class _MainPageState extends State<MainPage> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          showMenu(
-            context: context,
-            position: RelativeRect.fromLTRB(
-              MediaQuery.of(context).size.width - 100,
-              MediaQuery.of(context).size.height - 150,
-              16,
-              16,
-            ),
-            items: [
-              PopupMenuItem(
-                value: 'liga',
-                child: ListTile(
-                  leading: Icon(Icons.add),
-                  title: Text('Crear liga'),
-                ),
+      floatingActionButton: SizedBox(
+        height: 40,
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            showMenu(
+              context: context,
+              position: RelativeRect.fromLTRB(
+                MediaQuery.of(context).size.width - 100,
+                MediaQuery.of(context).size.height - 150,
+                16,
+                16,
               ),
-              PopupMenuItem(
-                value: 'actualizar',
-                child: ListTile(
-                  leading: Icon(Icons.refresh),
-                  title: Text('Actualizar'),
+              items: [
+                PopupMenuItem(
+                  value: 'liga',
+                  child: ListTile(
+                    leading: Icon(Icons.add),
+                    title: Text('Crear liga'),
+                  ),
                 ),
-              ),
-            ],
-          ).then((value) async {
-            if (value == 'actualizar') {
-              getLigas();
-            }
-            if (value == 'liga') {
-              var result = await Navigator.pushNamed(context, '/crear-liga');
-              if (result == true) {
+                PopupMenuItem(
+                  value: 'actualizar',
+                  child: ListTile(
+                    leading: Icon(Icons.refresh),
+                    title: Text('Actualizar'),
+                  ),
+                ),
+              ],
+            ).then((value) async {
+              if (value == 'actualizar') {
                 getLigas();
               }
-            }
-          });
-        },
-        label: Text("Opciones",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
-        icon: Icon(Icons.menu, color: Colors.white),
-        backgroundColor: Colors.green,
+              if (value == 'liga') {
+                var result = await Navigator.pushNamed(context, '/crear-liga');
+                if (result == true) {
+                  getLigas();
+                }
+              }
+            });
+          },
+          label: Text("Opciones",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
+          icon: Icon(Icons.menu, color: Colors.white),
+          backgroundColor: primaryColor,
+          elevation: 10,
+        ),
       ),
     );
   }

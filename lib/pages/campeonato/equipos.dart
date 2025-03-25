@@ -1,20 +1,17 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+
 class Equipos extends StatefulWidget {
   final Map? liga;
-  const Equipos({
-    super.key,
-    this.liga,
-  });
+  const Equipos({super.key, this.liga});
 
   @override
-  State<Equipos> createState() => _EquiposState();
+  State<Equipos> createState() => EquiposState();
 }
 
-class _EquiposState extends State<Equipos> {
+class EquiposState extends State<Equipos> {
   final url = dotenv.env['API_URL'];
   List equipos = [];
   bool loading = true;
@@ -24,7 +21,10 @@ class _EquiposState extends State<Equipos> {
     super.initState();
     getEquipo();
   }
-  getEquipo() async {
+
+  Future<void> getEquipo() async {
+    loading = true;
+    setState(() {});
     final ligaId = widget.liga!['id'];
     final response = await http.get(Uri.parse('$url/equipos?ligaId=$ligaId'));
     if (response.statusCode == 200) {
@@ -37,22 +37,23 @@ class _EquiposState extends State<Equipos> {
     loading = false;
     setState(() {});
   }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
-          child: loading?
-          const Center(child: CircularProgressIndicator()):
-          SingleChildScrollView(
+          child: loading
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal, // por si hay muchas columnas
+              scrollDirection: Axis.horizontal,
               child: DataTable(
-                columnSpacing: 5,         // Espacio horizontal entre columnas
-                dataRowMinHeight: 20,      // Altura mínima de las filas
-                dataRowMaxHeight: 30,      // Altura máxima de las filas
-                headingRowHeight: 36,      // Altura del encabezado
+                columnSpacing: 5,
+                dataRowMinHeight: 20,
+                dataRowMaxHeight: 30,
+                headingRowHeight: 36,
                 columns: const [
                   DataColumn(label: Text('#')),
                   DataColumn(label: Text('Equipo')),
@@ -77,17 +78,18 @@ class _EquiposState extends State<Equipos> {
                             width: 24,
                             height: 24,
                             errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.image_not_supported, size: 24, color: Colors.grey);
+                              return const Icon(Icons.image_not_supported,
+                                  size: 24, color: Colors.grey);
                             },
                           ),
                           Container(
-                            width: 100, // ancho máximo deseado
+                            width: 100,
                             child: Text(
                               equipo['name'] ?? '',
-                              maxLines: 2, // máximo de líneas a mostrar
-                              overflow: TextOverflow.ellipsis, // muestra "..." si se pasa
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                               softWrap: true,
-                              style: const TextStyle(height: 0.9), // line-height más compacto
+                              style: const TextStyle(height: 0.9),
                             ),
                           ),
                         ],
@@ -102,10 +104,10 @@ class _EquiposState extends State<Equipos> {
                     DataCell(Text('${equipo['dg'] ?? 0}')),
                     DataCell(Text('${equipo['pts'] ?? 0}')),
                     DataCell(Row(
-                      children: (equipo['ultimos5'] as List<dynamic>).map((r) {
+                      children:
+                      (equipo['ultimos5'] as List<dynamic>).map((r) {
                         IconData icon;
                         Color color;
-
                         switch (r) {
                           case 'Ganó':
                             icon = Icons.check_circle;

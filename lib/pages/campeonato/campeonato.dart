@@ -64,33 +64,6 @@ class _CampeonatoPageState extends State<CampeonatoPage>
       body: TabBarView(
         controller: _tabController,
         children: [
-          // Tab 1: Resumen
-          // Padding(
-          //   padding: const EdgeInsets.all(16.0),
-          //   child: Column(
-          //     children: [
-          //       Image.asset(
-          //         campeonato['tipo'] == 'Futbol'
-          //             ? 'assets/images/futbol.jpg'
-          //             : 'assets/images/basquet.jpg',
-          //         height: 200,
-          //         fit: BoxFit.cover,
-          //       ),
-          //       const SizedBox(height: 20),
-          //       Text(
-          //         campeonato['name'],
-          //         style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          //       ),
-          //       const SizedBox(height: 10),
-          //       Text(
-          //         'Cantidad de equipos: ${campeonato['equipos']}',
-          //         style: const TextStyle(fontSize: 18),
-          //       ),
-          //     ],
-          //   ),
-          // ),
-
-          // Tab 2: Equipos
           Equipos(liga: campeonato),
           Partidos(liga: campeonato),
         ],

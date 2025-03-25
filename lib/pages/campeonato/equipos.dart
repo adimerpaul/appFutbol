@@ -17,6 +17,7 @@ class Equipos extends StatefulWidget {
 class _EquiposState extends State<Equipos> {
   final url = dotenv.env['API_URL'];
   List equipos = [];
+  bool loading = true;
 
   @override
   void initState() {
@@ -33,81 +34,104 @@ class _EquiposState extends State<Equipos> {
     } else {
       print('Error');
     }
+    loading = false;
     setState(() {});
   }
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // const SizedBox(height: 10),
-        // Text(
-        //   'Tabla de posiciones - ${widget.liga?['name']}',
-        //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        // ),
-        // const Divider(),
         Expanded(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal, // por si hay muchas columnas
-            child: DataTable(
-              columnSpacing: 10,         // Espacio horizontal entre columnas
-              dataRowMinHeight: 30,      // Altura mínima de las filas
-              dataRowMaxHeight: 30,      // Altura máxima de las filas
-              headingRowHeight: 36,      // Altura del encabezado
-              columns: const [
-                DataColumn(label: Text('#')),
-                DataColumn(label: Text('Equipo')),
-                DataColumn(label: Text('PJ')),
-                DataColumn(label: Text('G')),
-                DataColumn(label: Text('E')),
-                DataColumn(label: Text('P')),
-                DataColumn(label: Text('GF')),
-                DataColumn(label: Text('GC')),
-                DataColumn(label: Text('DG')),
-                DataColumn(label: Text('Pts')),
-                DataColumn(label: Text('Últimos 5')),
-              ],
-              rows: equipos.map<DataRow>((equipo) {
-                return DataRow(cells: [
-                  DataCell(Text('${equipos.indexOf(equipo) + 1}')),
-                  DataCell(Text(equipo['name'] ?? '')),
-                  DataCell(Text('${equipo['pj'] ?? 0}')),
-                  DataCell(Text('${equipo['g'] ?? 0}')),
-                  DataCell(Text('${equipo['e'] ?? 0}')),
-                  DataCell(Text('${equipo['p'] ?? 0}')),
-                  DataCell(Text('${equipo['gf'] ?? 0}')),
-                  DataCell(Text('${equipo['gc'] ?? 0}')),
-                  DataCell(Text('${equipo['dg'] ?? 0}')),
-                  DataCell(Text('${equipo['pts'] ?? 0}')),
-                  DataCell(Row(
-                    children: (equipo['ultimos5'] as List<dynamic>).map((r) {
-                      IconData icon;
-                      Color color;
+          child: loading?
+          const Center(child: CircularProgressIndicator()):
+          SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal, // por si hay muchas columnas
+              child: DataTable(
+                columnSpacing: 5,         // Espacio horizontal entre columnas
+                dataRowMinHeight: 20,      // Altura mínima de las filas
+                dataRowMaxHeight: 30,      // Altura máxima de las filas
+                headingRowHeight: 36,      // Altura del encabezado
+                columns: const [
+                  DataColumn(label: Text('#')),
+                  DataColumn(label: Text('Equipo')),
+                  DataColumn(label: Text('PJ')),
+                  DataColumn(label: Text('G')),
+                  DataColumn(label: Text('E')),
+                  DataColumn(label: Text('P')),
+                  DataColumn(label: Text('GF')),
+                  DataColumn(label: Text('GC')),
+                  DataColumn(label: Text('DG')),
+                  DataColumn(label: Text('Pts')),
+                  DataColumn(label: Text('Últimos 5')),
+                ],
+                rows: equipos.map<DataRow>((equipo) {
+                  return DataRow(cells: [
+                    DataCell(Text('${equipos.indexOf(equipo) + 1}')),
+                    DataCell(
+                      Row(
+                        children: [
+                          Image.network(
+                            '$url/uploads/${equipo['imagen']}',
+                            width: 24,
+                            height: 24,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(Icons.image_not_supported, size: 24, color: Colors.grey);
+                            },
+                          ),
+                          Container(
+                            width: 100, // ancho máximo deseado
+                            child: Text(
+                              equipo['name'] ?? '',
+                              maxLines: 2, // máximo de líneas a mostrar
+                              overflow: TextOverflow.ellipsis, // muestra "..." si se pasa
+                              softWrap: true,
+                              style: const TextStyle(height: 0.9), // line-height más compacto
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    DataCell(Text('${equipo['pj'] ?? 0}')),
+                    DataCell(Text('${equipo['g'] ?? 0}')),
+                    DataCell(Text('${equipo['e'] ?? 0}')),
+                    DataCell(Text('${equipo['p'] ?? 0}')),
+                    DataCell(Text('${equipo['gf'] ?? 0}')),
+                    DataCell(Text('${equipo['gc'] ?? 0}')),
+                    DataCell(Text('${equipo['dg'] ?? 0}')),
+                    DataCell(Text('${equipo['pts'] ?? 0}')),
+                    DataCell(Row(
+                      children: (equipo['ultimos5'] as List<dynamic>).map((r) {
+                        IconData icon;
+                        Color color;
 
-                      switch (r) {
-                        case 'Ganó':
-                          icon = Icons.check_circle;
-                          color = Colors.green;
-                          break;
-                        case 'Perdió':
-                          icon = Icons.cancel;
-                          color = Colors.red;
-                          break;
-                        case 'Empate':
-                          icon = Icons.remove_circle;
-                          color = Colors.orange;
-                          break;
-                        default:
-                          icon = Icons.help;
-                          color = Colors.grey;
-                      }
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                        child: Icon(icon, size: 16, color: color),
-                      );
-                    }).toList(),
-                  )),
-                ]);
-              }).toList(),
+                        switch (r) {
+                          case 'Ganó':
+                            icon = Icons.check_circle;
+                            color = Colors.green;
+                            break;
+                          case 'Perdió':
+                            icon = Icons.cancel;
+                            color = Colors.red;
+                            break;
+                          case 'Empate':
+                            icon = Icons.remove_circle;
+                            color = Colors.orange;
+                            break;
+                          default:
+                            icon = Icons.help;
+                            color = Colors.grey;
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                          child: Icon(icon, size: 16, color: color),
+                        );
+                      }).toList(),
+                    )),
+                  ]);
+                }).toList(),
+              ),
             ),
           ),
         ),

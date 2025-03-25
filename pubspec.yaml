@@ -39,6 +39,7 @@ dependencies:
   flutter_dotenv: ^5.2.1
   sqflite: ^2.4.1
   elegant_notification: ^2.4.3
+  horizontal_data_table: ^4.3.1
 
 dev_dependencies:
   flutter_test:

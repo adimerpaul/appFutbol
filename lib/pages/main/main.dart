@@ -1,6 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:futbol/color/Colors.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:futbol/color/Colors.dart';
+import 'package:http/http.dart' as http;
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -10,22 +13,23 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   List campeonatos = [];
+  final url = dotenv.env['API_URL'];
   @override
   void initState() {
     super.initState();
-    getCampeonatos();
+    getLigas();
   }
-  getCampeonatos() {
-    campeonatos = [
-      {'id': 1, 'nombre': 'Futbol mayores', 'imagen': 'assets/images/futbol.jpg', 'equipos': 10},
-      {'id': 2, 'nombre': 'Futsal femenino', 'imagen': 'assets/images/futbol.jpg', 'equipos': 8},
-      {'id': 3, 'nombre': 'Futbol infantil', 'imagen': 'assets/images/futbol.jpg', 'equipos': 12},
-      {'id': 4, 'nombre': 'Basquet femenino', 'imagen': 'assets/images/basquet.jpg', 'equipos': 6},
-      // {'id': 5, 'nombre': 'Basquet masculino', 'imagen': 'assets/images/basquet.jpg', 'equipos': 8},
-      // {'id': 6, 'nombre': 'Voley femenino', 'imagen': 'assets/images/voley.jpg', 'equipos': 10},
-      // {'id': 7, 'nombre': 'Voley masculino', 'imagen': 'assets/images/voley.jpg', 'equipos': 8},
-    ];
-    setState(() {});
+  getLigas() async {
+    // print(url);
+    var response = await http.get(Uri.parse('$url/ligas'));
+    if (response.statusCode == 200) {
+      print(response.body);
+      var res = json.decode(response.body);
+      campeonatos = res;
+      setState(() {});
+    } else {
+      print('Error');
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -37,7 +41,7 @@ class _MainPageState extends State<MainPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Icon(Icons.menu),
-            Text('Campeonatos',style: TextStyle(fontSize: 20)),
+            Text('Campeonatos',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
             Icon(Icons.search),
             // icon notification
           ],
@@ -49,8 +53,8 @@ class _MainPageState extends State<MainPage> {
         itemBuilder: (context, index) {
           return ListTile(
             // dense: true,
-            leading: Image.asset(campeonatos[index]['imagen']),
-            title: Text(campeonatos[index]['nombre'],style: TextStyle(fontSize: 20)),
+            leading: Image.asset( campeonatos[index]['tipo'] == 'Futbol' ? 'assets/images/futbol.jpg' : 'assets/images/basquet.jpg', width: 50),
+            title: Text(campeonatos[index]['name'],style: TextStyle(fontSize: 20)),
             subtitle: Text('Equipos: ${campeonatos[index]['equipos']}'),
             onTap: () {
               Navigator.pushNamed(context, '/campeonato', arguments: campeonatos[index]);
@@ -58,6 +62,33 @@ class _MainPageState extends State<MainPage> {
           );
         },
       ),
+      floatingActionButton: PopupMenuButton(
+        icon: Icon(Icons.add),
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            child: ListTile(
+              leading: Icon(Icons.sports_soccer),
+              title: Text('Futbol'),
+            ),
+            value: 'liga',
+          ),
+          PopupMenuItem(
+            child: ListTile(
+              leading: Icon(Icons.refresh),
+              title: Text('Actualizar'),
+            ),
+            value: 'actualizar',
+          ),
+        ],
+        onSelected: (value) {
+          if (value == 'actualizar') {
+            getLigas();
+          }
+          if (value == 'liga') {
+            Navigator.pushNamed(context, '/crear-liga');
+          }
+        },
+      )
     );
   }
 }

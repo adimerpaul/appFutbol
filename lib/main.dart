@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:futbol/pages/main/main.dart';
 
 import 'pages/campeonato/campeonato.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  const bool isProduction = bool.fromEnvironment('dart.vm.product');
+  await dotenv.load(fileName: isProduction ? ".env.production" : ".env");
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {

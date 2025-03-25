@@ -36,7 +36,7 @@ class _CampeonatoPageState extends State<CampeonatoPage>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(campeonato['nombre']),
+        title: Text(campeonato['name']),
         backgroundColor: Colors.blue,
         bottom: TabBar(
           controller: _tabController,
@@ -56,13 +56,15 @@ class _CampeonatoPageState extends State<CampeonatoPage>
             child: Column(
               children: [
                 Image.asset(
-                  campeonato['imagen'],
+                  campeonato['tipo'] == 'Futbol'
+                      ? 'assets/images/futbol.jpg'
+                      : 'assets/images/basquet.jpg',
                   height: 200,
                   fit: BoxFit.cover,
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  campeonato['nombre'],
+                  campeonato['name'],
                   style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),

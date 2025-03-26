@@ -126,7 +126,7 @@ class EquiposState extends State<Equipos> {
                             color = Colors.grey;
                         }
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 0.0),
                           child: Icon(icon, size: 16, color: color),
                         );
                       }).toList(),

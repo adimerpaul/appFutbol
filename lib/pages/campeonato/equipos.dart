@@ -71,28 +71,44 @@ class EquiposState extends State<Equipos> {
                   return DataRow(cells: [
                     DataCell(Text('${equipos.indexOf(equipo) + 1}')),
                     DataCell(
-                      Row(
-                        children: [
-                          Image.network(
-                            '$url/uploads/${equipo['imagen']}',
-                            width: 24,
-                            height: 24,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.image_not_supported,
-                                  size: 24, color: Colors.grey);
-                            },
-                          ),
-                          Container(
-                            width: 100,
-                            child: Text(
-                              equipo['name'] ?? '',
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: true,
-                              style: const TextStyle(height: 0.9),
+                      InkWell(
+                        onTap: () async {
+                          // print(equipo);
+                          final res =await Navigator.pushNamed(
+                            context,
+                            '/crear-equipo',
+                            arguments: {
+                              'liga': widget.liga,
+                              'equipo': equipo,
+                            }
+                          );
+                          if (res == true){
+                            getEquipo();
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            Image.network(
+                              '$url/uploads/${equipo['imagen']}',
+                              width: 24,
+                              height: 24,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.image_not_supported,
+                                    size: 24, color: Colors.grey);
+                              },
                             ),
-                          ),
-                        ],
+                            Container(
+                              width: 100,
+                              child: Text(
+                                equipo['name'] ?? '',
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                style: const TextStyle(height: 0.9),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     DataCell(Text('${equipo['pj'] ?? 0}')),

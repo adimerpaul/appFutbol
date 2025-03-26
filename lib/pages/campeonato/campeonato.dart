@@ -106,12 +106,16 @@ class _CampeonatoPageState extends State<CampeonatoPage>
                 ],
               ).then((value) async {
                 if (value == 'agregar') {
-                  await Navigator.pushNamed(
+                  final res =await Navigator.pushNamed(
                     context,
                     '/crear-equipo',
-                    arguments: widget.campeonato,
+                    arguments: {
+                      'liga': widget.campeonato,
+                    }
                   );
-                  equiposKey.currentState?.getEquipo(); // ✅ refresca al volver
+                  if (res == true){
+                    equiposKey.currentState?.getEquipo(); // ✅ refresca al volver
+                  }
                 }
                 if (value == 'actualizar') {
                   equiposKey.currentState?.getEquipo(); // ✅ actualiza

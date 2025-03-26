@@ -51,9 +51,12 @@ class _MyAppState extends State<MyApp> {
             );
           }
           if (settings.name == '/crear-equipo') {
-            final liga = settings.arguments as Map;
+            final args = settings.arguments as Map;
             return MaterialPageRoute(
-              builder: (context) => CrearEquipo(liga: liga),
+              builder: (context) => CrearEquipo(
+                  liga: args['liga'],
+                  equipo: args['equipo'],
+              ),
             );
           }
 
